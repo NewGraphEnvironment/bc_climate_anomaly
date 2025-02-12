@@ -39,6 +39,9 @@ pkgs <- c(
   "plotly"
 )
 
+# get pak if you don't already have it
+if (!requireNamespace("pak", quietly = TRUE)) install.packages("pak")
+
 # just install packages if not already present
 pkgs_required <- pkgs[!pkgs %in% rownames(installed.packages())]
 
@@ -87,7 +90,9 @@ bc_ecoprv_shp <-
 
 # BC watersheds
 bc_wtrshd_shp <-
-  st_read(shp_fls_lst[str_detect(shp_fls_lst, "bc_watersheds") == T])
+  st_read(shp_fls_lst[str_detect(shp_fls_lst, "bc_watersheds") == T]) |>
+  # sort so we can more easily find the watersheds
+  dplyr::arrange(MJR_WTRSHM)
 # plot(st_geometry(bc_wtrshd_shp))
 
 # Western North America
