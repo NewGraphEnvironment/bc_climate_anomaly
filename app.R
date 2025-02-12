@@ -15,27 +15,41 @@
 # limitations under the License.
 
 # Required -------------------
-library('shiny')
-library('shinydashboard')
-library('shinyWidgets')
-library("shinythemes")
-library("shinyjs")
-library('shinyalert')
-library('markdown')
-library('rmarkdown')
-library('sf')
-library('terra')
-library('leaflet')
-library('tidyterra')
-library('tidyverse')
-library('magrittr')
-library('lubridate')
-library("DT")
-library('zoo')
-library('zyp')
-library('viridisLite')
-library('cptcity')
-library('plotly')
+pkgs <- c(
+  "shiny",
+  "shinydashboard",
+  "shinyWidgets",
+  "shinythemes",
+  "shinyjs",
+  "shinyalert",
+  "markdown",
+  "rmarkdown",
+  "sf",
+  "terra",
+  "leaflet",
+  "tidyterra",
+  "tidyverse",
+  "magrittr",
+  "lubridate",
+  "DT",
+  "zoo",
+  "zyp",
+  "viridisLite",
+  "cptcity",
+  "plotly"
+)
+
+# just install packages if not already present
+pkgs_required <- pkgs[!pkgs %in% rownames(installed.packages())]
+
+if (length(pkgs_required) > 0) {
+  pak::pkg_install(pkgs_required, ask = FALSE)
+}
+
+# load the packages
+lapply(pkgs,
+       require,
+       character.only = TRUE)
 
 # Load and process input data -------
 ## Paths --
