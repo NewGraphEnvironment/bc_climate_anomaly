@@ -89,11 +89,12 @@ bc_ecoprv_shp <-
 # plot(st_geometry(bc_ecoprv_shp))
 
 # BC watersheds
-bc_wtrshd_shp <-
-  st_read(shp_fls_lst[str_detect(shp_fls_lst, "bc_watersheds") == T]) |>
-  # sort so we can more easily find the watersheds
-  dplyr::arrange(MJR_WTRSHM)
+# bc_wtrshd_shp <-
+#   st_read(shp_fls_lst[str_detect(shp_fls_lst, "bc_watersheds") == T])
 # plot(st_geometry(bc_wtrshd_shp))
+
+# HACK - here we read in our custon watershed groups from the freshwater atlas
+bc_wtrshd_shp <- sf::st_read("shapefiles/fwa_watershed_groups_poly.geojson", quiet = TRUE)
 
 # Western North America
 na_shp <-
