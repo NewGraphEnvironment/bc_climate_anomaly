@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+shapefiles/aoi_skeena_fish_passage_2024.geojson
+shapefiles/fwa_watershed_groups_poly_raw.geojson
+shapefiles/fwa_watershed_groups_poly.geojson
