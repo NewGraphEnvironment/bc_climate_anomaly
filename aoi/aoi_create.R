@@ -5,8 +5,8 @@
 # rather than fuss with try to get pickers to choose multiple polgons and merge them. lets just do that ourselves
 # and add them to the options
 
-# use bcdata in the cmdline to get the layer
-bcdata dump whse_basemapping.fwa_watershed_groups_poly > shapefiles/fwa_watershed_groups_poly_raw.geojson
+# use bcdata (https://github.com/smnorris/bcdata) in the cmdline to get the layer
+# bcdata dump whse_basemapping.fwa_watershed_groups_poly > shapefiles/fwa_watershed_groups_poly_raw.geojson
 
 path_raw <- "shapefiles/fwa_watershed_groups_poly_raw.geojson"
 path_new <- "shapefiles/fwa_watershed_groups_poly.geojson"
