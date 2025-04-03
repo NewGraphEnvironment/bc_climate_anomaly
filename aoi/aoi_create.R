@@ -12,6 +12,13 @@ path_raw <- "shapefiles/fwa_watershed_groups_poly_raw.geojson"
 path_new <- "shapefiles/fwa_watershed_groups_poly.geojson"
 path_aoi <- fs::path("shapefiles", aoi_name, ext ="geojson")
 
+
+################################################################################################################
+#--------------------------------------------------skeena---------------------------------------------------
+################################################################################################################
+aoi_name <- "Skeena River Watershed Study Area"
+
+
 usethis::use_git_ignore(
   c(path_raw,
     path_new,
@@ -23,7 +30,6 @@ wshd_groups_raw <- sf::st_read(path_raw, quiet = TRUE) |>
 
 wshds <- c("Bulkley River", "Kispiox River", "Kitsumkalum River", "Zymoetz River", "Morice River")
 
-aoi_name <- "aoi_skeena_fish_passage_2024"
 
 aoi <- wshd_groups_raw |>
   dplyr::filter(MJR_WTRSHM %in% wshds) |>
@@ -70,6 +76,70 @@ wshd_groups <- dplyr::bind_rows(
   dplyr::arrange(MJR_WTRSHM)
 
 # to keep it clean just burn over
-sf::st_write(wshd_groups, path_new, delete_dsn = TRUE)
+# sf::st_write(wshd_groups, path_new, delete_dsn = TRUE)
+
+
+################################################################################################################
+#--------------------------------------------------Neexdzii Kwa---------------------------------------------------
+################################################################################################################
+aoi_name <- "Study Area"
+
+# lets build a custom watersehed just for upstream of the confluence of Neexdzii Kwa and Wetzin Kwa
+# blueline key
+blk <- 360873822
+# downstream route measure
+drm <- 166030.4
+
+
+
+aoi <- fwapgr::fwa_watershed_at_measure(blue_line_key = blk,
+                                            downstream_route_measure = drm) |>
+  sf::st_transform(4326)
+
+# quick sanity check to see that our aoi is one polygon
+geom_type <- sf::st_geometry_type(aoi)
+geom_type_input <- "POLYGON"
+
+if (geom_type != geom_type_input) {
+  cli::cli_alert_warning("Your AOI is not a {geom_type_input}, it is a {geom_type}.")
+}
+
+
+# now add the aoi to the raw geojson and sort for easy pickins (we could look to add to the revised on in the future to keep everything together)
+wshd_groups2 <- dplyr::bind_rows(
+  wshd_groups,
+  aoi |>
+    dplyr::mutate(MJR_WTRSHM = aoi_name)
+) |>
+  dplyr::arrange(MJR_WTRSHM)
+
+# visualize your aoi
+ggplot2::ggplot() +
+  ggplot2::geom_sf(data = aoi, fill = "blue", alpha = 0.5)
+
+# visualize both aoi
+ggplot2::ggplot() +
+  ggplot2::geom_sf(
+    data = wshd_groups2 |>
+      dplyr::filter(
+        MJR_WTRSHM %in% c("Skeena River Watershed Study Area", "Study Area")
+      ),
+    fill = "blue", alpha = 0.5
+    )
+
+
+# quick sanity check to see that our aoi is one polygon
+geom_type <- sf::st_geometry_type(aoi)
+geom_type_input <- "POLYGON"
+
+if (geom_type != geom_type_input) {
+  cli::cli_alert_warning("Your AOI is not a {geom_type_input}, it is a {geom_type}.")
+}
+
+# burn the aoi to a stand_alone file so that we can start over whenever
+sf::st_write(aoi, path_aoi, delete_dsn = TRUE)
+
+# to keep it clean just burn over
+sf::st_write(wshd_groups2, path_new, delete_dsn = TRUE)
 
 
