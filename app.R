@@ -3083,4 +3083,10 @@ server <- function(session, input, output) {
 }
 
 # Run the application
-shinyApp(ui = ui, server = server)
+# shinyApp(ui = ui, server = server)
+
+
+# hack - only run if interactive. then we steal the logic to export plots....
+if (interactive()) {
+  shiny::shinyApp(ui = ui, server = server)
+}
